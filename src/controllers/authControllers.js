@@ -45,7 +45,7 @@ const authControllers = {
         role: user.role,
       };
 
-      const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1m" });
+      const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1d" });
 
       res.json({
         success: true,
@@ -123,6 +123,26 @@ const authControllers = {
       res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
+    }
+  },
+
+  getProfile: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User tidak ditemukan" });
+      }
+
+      const result = {
+        id: user._id,
+        name: user.name,
+        username: user.username,
+      }
+      res.json({ success: true, message: "Berhasil mengambil data user", data: result });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: "Terjadi kesalahan server" });
     }
   },
 };
