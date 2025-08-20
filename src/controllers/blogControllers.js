@@ -28,6 +28,7 @@ const blogControllers = {
         title: blog.title,
         date: blog.date.toISOString().split("T")[0],
         image: blog.image,
+        description: blog.description,
         name: blog.userId.name,
       }));
 
@@ -109,6 +110,7 @@ const blogControllers = {
         title: blog.title,
         date: blog.date.toISOString().split("T")[0],
         image: blog.image,
+        description: blog.description,
         name: blog.userId.name,
       }));
 
