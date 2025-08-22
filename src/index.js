@@ -14,14 +14,22 @@ const blogRoutes = require("./routes/blogRoutes");
 app.use(express.json()); // untuk application/json
 app.use(express.urlencoded({ extended: true })); 
 
-// Folder statis untuk melihat gambar
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
 // Middleware
 app.use(cors({
   origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', "ngrok-skip-browser-warning"]
+}));
+
+// Folder statis untuk melihat gambar
+app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith(".jpg") || filePath.endsWith(".jpeg")) {
+      res.setHeader("Content-Type", "image/jpeg");
+    } else if (filePath.endsWith(".png")) {
+      res.setHeader("Content-Type", "image/png");
+    }
+  }
 }));
 
 app.use(express.json());

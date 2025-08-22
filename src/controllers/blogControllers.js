@@ -27,7 +27,7 @@ const blogControllers = {
         id: blog._id,
         title: blog.title,
         date: blog.date.toISOString().split("T")[0],
-        image: blog.image,
+        image: `uploads/${blog.image}`,
         description: blog.description,
         name: blog.userId.name,
       }));
@@ -65,7 +65,7 @@ const blogControllers = {
         id: blog._id,
         title: blog.title,
         date: blog.date.toISOString().split("T")[0],
-        image: blog.image,
+        image: `uploads/${blog.image}`,
         name: blog.userId.name,
         description: blog.description,
       };
@@ -109,7 +109,7 @@ const blogControllers = {
         id: blog._id,
         title: blog.title,
         date: blog.date.toISOString().split("T")[0],
-        image: blog.image,
+        image: `uploads/${blog.image}`,
         description: blog.description,
         name: blog.userId.name,
       }));
