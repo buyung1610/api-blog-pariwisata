@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   origin: '*', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', "ngrok-skip-browser-warning"]
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Folder statis untuk melihat gambar
