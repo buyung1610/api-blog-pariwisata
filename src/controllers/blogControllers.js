@@ -156,12 +156,14 @@ const blogControllers = {
       }
 
       const userId = req.user?.id; // pastikan user.id tersedia dari middleware auth
-      
+
       const { title, description } = req.body;
       let date = req.body.date;
 
       if (!userId) {
-        return res.status(400).json({ message: "User tidak ditemukan, silahkan login" });
+        return res
+          .status(400)
+          .json({ message: "User tidak ditemukan, silahkan login" });
       }
 
       // Auto set date jika kosong
@@ -210,7 +212,18 @@ const blogControllers = {
         return res.status(400).json({ errors: shortErrors });
       }
 
-      const { title, date, description } = req.body;
+      const body = req.body || {};
+
+      if (Object.keys(body).length === 0) {
+        return res
+          .status(400)
+          .json({
+            success: false,
+            message: "Tidak ada data yang dikirim untuk update",
+          });
+      }
+
+      const { title, date, description } = body;
       const blog = await Blog.findById(req.params.id);
 
       if (!blog) {
