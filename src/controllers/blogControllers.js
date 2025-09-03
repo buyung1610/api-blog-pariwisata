@@ -12,7 +12,7 @@ const blogControllers = {
     const skip = (page - 1) * limit;
     try {
       const blogs = await Blog.find({
-        title: { $regex: '^' + search, $options: "i" },
+        title: { $regex: "^" + search, $options: "i" },
       })
         .populate("userId")
         .skip(skip)
@@ -20,7 +20,9 @@ const blogControllers = {
         .sort({ date: -1 });
 
       if (blogs.length === 0) {
-        return res.status(404).json({ success: false, message: "Blog kosong", data: [] });
+        return res
+          .status(404)
+          .json({ success: false, message: "Blog kosong", data: [] });
       }
 
       const result = blogs.map((blog) => ({
@@ -136,15 +138,6 @@ const blogControllers = {
 
   createBlog: async (req, res) => {
     try {
-      const userId = req.user.id; // pastikan user.id tersedia dari middleware auth
-      const { title, description } = req.body;
-      let date = req.body.date;
-
-      // Auto set date jika kosong
-      if (!date) {
-        date = new Date().toISOString().split("T")[0];
-      }
-
       // Validasi input
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -160,6 +153,15 @@ const blogControllers = {
           message: err.msg,
         }));
         return res.status(400).json({ errors: shortErrors });
+      }
+
+      const userId = req.user.id; // pastikan user.id tersedia dari middleware auth
+      const { title, description } = req.body;
+      let date = req.body.date;
+
+      // Auto set date jika kosong
+      if (!date) {
+        date = new Date().toISOString().split("T")[0];
       }
 
       // Validasi gambar
@@ -178,19 +180,14 @@ const blogControllers = {
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ success: false, message: "Terjadi kesalahan server" });
+      res
+        .status(500)
+        .json({ success: false, message: "Terjadi kesalahan server" });
     }
   },
 
   updateBlog: async (req, res) => {
     try {
-      const { title, date, description } = req.body;
-      const blog = await Blog.findById(req.params.id);
-
-      if (!blog) {
-        return res.status(404).json({ success: false, message: "Blog tidak ditemukan" });
-      }
-
       // Validasi input
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -206,6 +203,15 @@ const blogControllers = {
           message: err.msg,
         }));
         return res.status(400).json({ errors: shortErrors });
+      }
+
+      const { title, date, description } = req.body;
+      const blog = await Blog.findById(req.params.id);
+
+      if (!blog) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Blog tidak ditemukan" });
       }
 
       blog.title = title || blog.title;
@@ -225,7 +231,9 @@ const blogControllers = {
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ success: false, message: "Terjadi kesalahan server" });
+      res
+        .status(500)
+        .json({ success: false, message: "Terjadi kesalahan server" });
     }
   },
 
@@ -234,13 +242,17 @@ const blogControllers = {
       const blog = await Blog.findByIdAndDelete(req.params.id);
 
       if (!blog) {
-        return res.status(404).json({ success: false, message: "Blog tidak ditemukan" });
+        return res
+          .status(404)
+          .json({ success: false, message: "Blog tidak ditemukan" });
       }
 
       res.json({ success: true, message: "Blog berhasil dihapus" });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ success: false, message: "Terjadi kesalahan server" });
+      res
+        .status(500)
+        .json({ success: false, message: "Terjadi kesalahan server" });
     }
   },
 };

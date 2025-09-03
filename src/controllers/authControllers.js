@@ -8,7 +8,6 @@ const BlacklistToken = require("../models/blacklistToken");
 const authControllers = {
   login: async (req, res) => {
     try {
-      const { username, password } = req.body;
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
@@ -27,6 +26,8 @@ const authControllers = {
         }));
         res.status(400).json({ errors: shortErrors });
       }
+
+      const { username, password } = req.body;
 
       const user = await User.findOne({ username });
       if (!user) {
@@ -63,7 +64,6 @@ const authControllers = {
 
   register: async (req, res) => {
     try {
-      const { name, username, password } = req.body;
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
@@ -89,6 +89,8 @@ const authControllers = {
       if (existingUser) {
         return res.status(400).json({ message: "Username sudah digunakan" });
       }
+      
+      const { name, username, password } = req.body;
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({ name, username, password: hashedPassword });
