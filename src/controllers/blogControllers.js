@@ -155,9 +155,14 @@ const blogControllers = {
         return res.status(400).json({ errors: shortErrors });
       }
 
-      const userId = req.user.id; // pastikan user.id tersedia dari middleware auth
+      const userId = req.user?.id; // pastikan user.id tersedia dari middleware auth
+      
       const { title, description } = req.body;
       let date = req.body.date;
+
+      if (!userId) {
+        return res.status(400).json({ message: "User tidak ditemukan, silahkan login" });
+      }
 
       // Auto set date jika kosong
       if (!date) {

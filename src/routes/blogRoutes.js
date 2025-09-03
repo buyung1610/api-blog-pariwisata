@@ -4,7 +4,7 @@ const verifyToken = require("../middleware/verifyToken");
 const upload = require("../middleware/upload");
 const blogValidator = require("../validators/blogValidator");
 
-// router.use(verifyToken);
+router.use(verifyToken);
 
 router.get("/", blogControllers.getAll);
 router.get("/user", blogControllers.getByUserId);
