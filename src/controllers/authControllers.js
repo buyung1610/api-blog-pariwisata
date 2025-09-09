@@ -85,13 +85,13 @@ const authControllers = {
         res.status(400).json({ errors: shortErrors });
       }
 
+      const { name, username, password } = req.body;
+
       const existingUser = await User.findOne({ username });
       if (existingUser) {
         return res.status(400).json({ message: "Username sudah digunakan" });
       }
       
-      const { name, username, password } = req.body;
-
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({ name, username, password: hashedPassword });
       await user.save();

@@ -212,15 +212,15 @@ const blogControllers = {
         return res.status(400).json({ errors: shortErrors });
       }
 
+      const userId = req.user?.id;
+
       const body = req.body || {};
 
-      if (Object.keys(body).length === 0) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: "Tidak ada data yang dikirim untuk update",
-          });
+      if (Object.keys(body).length === 0 && !req.file) {
+        return res.status(400).json({
+          success: false,
+          message: "Tidak ada data yang dikirim untuk update",
+        });
       }
 
       const { title, date, description } = body;
@@ -230,6 +230,12 @@ const blogControllers = {
         return res
           .status(404)
           .json({ success: false, message: "Blog tidak ditemukan" });
+      }
+
+      if (blog.userId.toString() !== userId) {
+        return res
+          .status(403)
+          .json({ success: false, message: "Anda tidak memiliki akses" });
       }
 
       blog.title = title || blog.title;
@@ -257,12 +263,19 @@ const blogControllers = {
 
   deleteBlog: async (req, res) => {
     try {
+      const userId = req.user?.id;
       const blog = await Blog.findByIdAndDelete(req.params.id);
 
       if (!blog) {
         return res
           .status(404)
           .json({ success: false, message: "Blog tidak ditemukan" });
+      }
+
+      if (blog.userId.toString() !== userId) {
+        return res
+          .status(403)
+          .json({ success: false, message: "Anda tidak memiliki akses" });
       }
 
       res.json({ success: true, message: "Blog berhasil dihapus" });
