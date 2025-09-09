@@ -5,6 +5,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 const connectDB = require("./config/connectDb");
 const path = require("path")
+const cron = require('node-cron');
+const seedBlogs = require("./seeders/blogSeeder");
 
 connectDB();
 
@@ -31,6 +33,16 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
     }
   }
 }));
+
+// Job jalan tiap jam 12
+cron.schedule('0 0 * * *', async () => {
+  console.log("Cron jalan:", new Date().toLocaleString());
+  try {
+    await seedBlogs(); // tunggu sampai selesai
+  } catch (error) {
+    console.error("Error di cron job:", error);
+  }
+});
 
 app.use(express.json());
 app.use(morgan('dev'));
