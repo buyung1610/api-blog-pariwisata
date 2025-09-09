@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const seedBlogs = require("../seeders/blogSeeder");
 
 const connectDB = async () => {
     try {

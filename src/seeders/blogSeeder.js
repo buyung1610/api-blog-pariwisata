@@ -116,6 +116,26 @@ async function seedBlogs() {
     },
   ];
 
+  fs.readdir(uploadDir, (err, files) => {
+    if (err) {
+      return console.error("Gagal membaca folder:", err);
+    }
+
+    files.forEach((file) => {
+      const filePath = path.join(uploadDir, file);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error(`Gagal menghapus file ${file}:`, err);
+        } else {
+          console.log(`File ${file} berhasil dihapus`);
+        }
+      });
+    });
+  });
+
+  const result = await Blog.deleteMany({});
+  console.log(`Semua artikel berhasil dihapus. Total: ${result.deletedCount}`);
+
   for (const b of blogs) {
     const defaultPath = path.join(__dirname, "../default_images", b.image);
 
@@ -130,7 +150,7 @@ async function seedBlogs() {
     });
   }
 
-  console.log("Seeder produk default berhasil dijalankan");
+  console.log("Seeder artikel default berhasil dijalankan");
 }
 
 module.exports = seedBlogs;

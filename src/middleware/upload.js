@@ -7,8 +7,13 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'src/uploads/'); // Folder penyimpanan
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname); // Nama file unik
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname); // ambil ekstensi (.jpg/.png)
+    const baseName = path.basename(file.originalname, ext)
+      .replace(/\s+/g, "-") // ganti spasi dengan -
+      .toLowerCase();
+
+    cb(null, Date.now() + "-" + baseName + ext);
   }
 });
 
