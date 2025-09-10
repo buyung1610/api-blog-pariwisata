@@ -1,14 +1,26 @@
 const fs = require("fs");
 const path = require("path");
 const Blog = require("../models/blogModel");
+const User = require("../models/userModel");
+const bcrypt = require("bcrypt");
 
 async function seedBlogs() {
   const uploadDir = path.join(__dirname, "../uploads");
   if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
+  await User.deleteMany({name: {$in: ["Budi", "Ani"]}});
+
+  const hashedPasswordBudi = await bcrypt.hash("passwordBudi", 10);
+  const hashedPasswordAni = await bcrypt.hash("passwordAni", 10);
+
+  const users = await User.insertMany([
+    { name: "Budi", username: "budi", password: hashedPasswordBudi },
+    { name: "Ani", username: "ani", password: hashedPasswordAni },
+  ]);
+
   const blogs = [
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[0]._id,
       image: "banda-neira.png",
       title: "Banda Neira",
       date: "2022-01-01",
@@ -19,7 +31,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[0]._id,
       image: "borobudur.png",
       title: "Candi Borobudur",
       date: "2022-02-01",
@@ -30,7 +42,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[0]._id,
       image: "bromo.png",
       title: "Gunung Bromo",
       date: "2022-03-01",
@@ -40,7 +52,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[0]._id,
       image: "nusa-penida.png",
       title: "Nusa Penida",
       date: "2022-04-01",
@@ -52,7 +64,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[0]._id,
       image: "ranu-gumbolo.png",
       title: "Ranu Gumbolo",
       date: "2022-05-01",
@@ -62,7 +74,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[1]._id,
       image: "raja-ampat.jpg",
       title: "Raja Ampat",
       date: "2022-06-01",
@@ -73,7 +85,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[1]._id,
       image: "kawah-ijen.jpg",
       title: "Kawah Ijen",
       date: "2022-07-01",
@@ -84,7 +96,7 @@ async function seedBlogs() {
       `,
     },
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[1]._id,
       image: "danau-toba.jpg",
       title: "Danau Toba",
       date: "2022-08-01",
@@ -94,7 +106,7 @@ async function seedBlogs() {
       `,
     },
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[1]._id,
       image: "gua-jomblang.jpg",
       title: "Goa Jomblang",
       date: "2022-09-01",
@@ -104,7 +116,7 @@ async function seedBlogs() {
       `,
     },
     {
-      userId: "689c5192c77ff67f025ceaf7",
+      userId: users[1]._id,
       image: "gunung-rinjani.jpg",
       title: "Gunung Rinjani",
       date: "2022-10-01",

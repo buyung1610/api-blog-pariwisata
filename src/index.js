@@ -54,5 +54,5 @@ app.use("/blog", blogRoutes);
 const port = process.env.PORT;
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://192.168.1.33:${port}`);
+    console.log(`Example app listening at http://localhost:${port}`);
 });
