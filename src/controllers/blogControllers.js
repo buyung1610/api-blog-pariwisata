@@ -37,7 +37,7 @@ const blogControllers = {
       const totalData = await Blog.countDocuments();
       const totalPages = Math.ceil(totalData / limit);
 
-      res.json({
+      return res.json({
         success: true,
         message: "Berhasil mengambil data",
         page,
@@ -48,7 +48,7 @@ const blogControllers = {
       });
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
@@ -72,14 +72,14 @@ const blogControllers = {
         description: blog.description,
       };
 
-      res.json({
+      return res.json({
         success: true,
         message: "Berhasil mengambil data",
         data: result,
       });
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
@@ -119,7 +119,7 @@ const blogControllers = {
       const totalData = await Blog.countDocuments({ userId: userId });
       const totalPages = Math.ceil(totalData / limit);
 
-      res.json({
+      return res.json({
         success: true,
         message: "Berhasil mengambil data",
         page,
@@ -130,7 +130,7 @@ const blogControllers = {
       });
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
@@ -180,14 +180,14 @@ const blogControllers = {
       const blog = new Blog({ userId, image, title, date, description });
       await blog.save();
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         message: "Blog berhasil ditambahkan",
         data: blog,
       });
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
@@ -248,14 +248,14 @@ const blogControllers = {
 
       await blog.save();
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "Blog berhasil diperbarui",
         data: blog,
       });
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
@@ -278,10 +278,10 @@ const blogControllers = {
           .json({ success: false, message: "Anda tidak memiliki akses" });
       }
 
-      res.json({ success: true, message: "Blog berhasil dihapus" });
+      return res.json({ success: true, message: "Blog berhasil dihapus" });
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }

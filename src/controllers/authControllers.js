@@ -24,7 +24,7 @@ const authControllers = {
           field: err.path,
           message: err.msg,
         }));
-        res.status(400).json({ errors: shortErrors });
+        return res.status(400).json({ errors: shortErrors });
       }
 
       const { username, password } = req.body;
@@ -48,7 +48,7 @@ const authControllers = {
 
       const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1d" });
 
-      res.json({
+      return res.json({
         success: true,
         message: "Login berhasil",
         token, 
@@ -56,7 +56,7 @@ const authControllers = {
       });
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
@@ -82,24 +82,24 @@ const authControllers = {
           field: err.path,
           message: err.msg,
         }));
-        res.status(400).json({ errors: shortErrors });
+        return res.status(400).json({ errors: shortErrors });
       }
 
       const { name, username, password } = req.body;
 
       const existingUser = await User.findOne({ username });
       if (existingUser) {
-        return res.status(400).json({ message: "Username sudah digunakan" });
+        return res.status(409).json({ message: "Username sudah digunakan" });
       }
       
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({ name, username, password: hashedPassword });
       await user.save();
 
-      res.json({ success: true, message: "Registrasi berhasil" });
+      return res.json({ success: true, message: "Registrasi berhasil" });
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
@@ -119,10 +119,10 @@ const authControllers = {
 
       await BlacklistToken.create({ token, expiredAt });
 
-      res.json({ message: "Logout berhasil, token di-blacklist" });
+      return res.json({ message: "Logout berhasil, token di-blacklist" });
     } catch (error) {
       console.error(error);
-      res
+      return res
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
@@ -141,10 +141,10 @@ const authControllers = {
         name: user.name,
         username: user.username,
       }
-      res.json({ success: true, message: "Berhasil mengambil data user", data: result });
+      return res.json({ success: true, message: "Berhasil mengambil data user", data: result });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ success: false, message: "Terjadi kesalahan server" });
+      return res.status(500).json({ success: false, message: "Terjadi kesalahan server" });
     }
   },
 };

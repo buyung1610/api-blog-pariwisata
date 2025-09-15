@@ -32,7 +32,7 @@ const authValidator = {
       .notEmpty().withMessage('Username wajib diisi'),
 
     body('password')
-      .exists().withMessage('Username wajib diisi')
+      .exists().withMessage('Password wajib diisi')
       .bail()
       .isString().withMessage('Password harus berupa teks')
       .notEmpty().withMessage('Password wajib diisi'),
