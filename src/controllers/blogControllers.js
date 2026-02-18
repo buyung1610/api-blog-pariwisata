@@ -1,18 +1,19 @@
 const Blog = require("../models/blogModel");
 const User = require("../models/userModel");
-const { validationResult } = require("express-validator");
 
 const blogControllers = {
   getAll: async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || "";
+    const type = req.user.appSource || "";
 
     // Hitung data yang dilewati (skip)
     const skip = (page - 1) * limit;
     try {
       const blogs = await Blog.find({
         title: { $regex: "^" + search, $options: "i" },
+        type: type,
       })
         .populate("userId")
         .skip(skip)
@@ -56,7 +57,12 @@ const blogControllers = {
 
   getById: async (req, res) => {
     try {
-      const blog = await Blog.findById(req.params.id).populate("userId");
+      const id = req.params.id;
+      const type = req.user.appSource || "";
+
+      const blog = await Blog.findOne({ _id: id, type: type }).populate(
+        "userId",
+      );
       if (!blog) {
         return res
           .status(404)
@@ -89,6 +95,7 @@ const blogControllers = {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || "";
+    const type = req.user.appSource || "";
 
     // Hitung data yang dilewati (skip)
     const skip = (page - 1) * limit;
@@ -97,6 +104,7 @@ const blogControllers = {
       const blogs = await Blog.find({
         userId: userId,
         title: { $regex: search, $options: "i" },
+        type: type,
       })
         .populate("userId")
         .skip(skip)
@@ -138,32 +146,22 @@ const blogControllers = {
 
   createBlog: async (req, res) => {
     try {
-      // Validasi input
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        const allErrors = errors.array();
-        const seenFields = new Set();
-        const uniqueErrors = allErrors.filter((err) => {
-          if (seenFields.has(err.path)) return false;
-          seenFields.add(err.path);
-          return true;
-        });
-        const shortErrors = uniqueErrors.map((err) => ({
-          field: err.path,
-          message: err.msg,
-        }));
-        return res.status(400).json({ errors: shortErrors });
-      }
-
       const userId = req.user?.id; // pastikan user.id tersedia dari middleware auth
 
-      const { title, description } = req.body;
+      const { title, description, category } = req.body;
+      const type = req.user.appSource;
       let date = req.body.date;
 
       if (!userId) {
         return res
           .status(400)
           .json({ message: "User tidak ditemukan, silahkan login" });
+      }
+
+      if (type === "kesehatan" && !category) {
+        return res.status(400).json({
+          message: "category wajib untuk artikel kesehatan",
+        });
       }
 
       // Auto set date jika kosong
@@ -177,7 +175,15 @@ const blogControllers = {
         return res.status(400).json({ message: "Gambar wajib diisi" });
       }
 
-      const blog = new Blog({ userId, image, title, date, description });
+      const blog = new Blog({
+        userId,
+        image,
+        title,
+        date,
+        description,
+        type,
+        category,
+      });
       await blog.save();
 
       res.status(201).json({
@@ -195,26 +201,10 @@ const blogControllers = {
 
   updateBlog: async (req, res) => {
     try {
-      // Validasi input
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        const allErrors = errors.array();
-        const seenFields = new Set();
-        const uniqueErrors = allErrors.filter((err) => {
-          if (seenFields.has(err.path)) return false;
-          seenFields.add(err.path);
-          return true;
-        });
-        const shortErrors = uniqueErrors.map((err) => ({
-          field: err.path,
-          message: err.msg,
-        }));
-        return res.status(400).json({ errors: shortErrors });
-      }
-
       const userId = req.user?.id;
 
       const body = req.body || {};
+      const type = req.user.appSource;
 
       if (Object.keys(body).length === 0 && !req.file) {
         return res.status(400).json({
@@ -223,7 +213,7 @@ const blogControllers = {
         });
       }
 
-      const { title, date, description } = body;
+      const { title, date, description, category } = body;
       const blog = await Blog.findById(req.params.id);
 
       if (!blog) {
@@ -241,6 +231,7 @@ const blogControllers = {
       blog.title = title || blog.title;
       blog.date = date || blog.date;
       blog.description = description || blog.description;
+      blog.category = category || blog.category;
 
       if (req.file) {
         blog.image = req.file.filename;

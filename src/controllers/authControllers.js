@@ -8,25 +8,6 @@ const BlacklistToken = require("../models/blacklistToken");
 const authControllers = {
   login: async (req, res) => {
     try {
-      const errors = validationResult(req);
-
-      if (!errors.isEmpty()) {
-        const allErrors = errors.array();
-
-        const seenFields = new Set();
-        const uniqueErrors = allErrors.filter((err) => {
-          if (seenFields.has(err.path)) return false;
-          seenFields.add(err.path);
-          return true;
-        });
-
-        const shortErrors = uniqueErrors.map((err) => ({
-          field: err.path,
-          message: err.msg,
-        }));
-        res.status(400).json({ errors: shortErrors });
-      }
-
       const { username, password } = req.body;
 
       const user = await User.findOne({ username });
@@ -42,11 +23,11 @@ const authControllers = {
       const payload = {
         id: user._id,
         username: user.username,
-        nama: user.nama_user,
-        role: user.role,
+        name: user.name,
+        appSource: user.appSource,
       };
 
-      const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1d" });
+      const token = jwt.sign(payload, SECRET_KEY);
 
       res.json({
         success: true,
@@ -64,28 +45,7 @@ const authControllers = {
 
   register: async (req, res) => {
     try {
-      const errors = validationResult(req);
-
-      if (!errors.isEmpty()) {
-        // Ambil array semua error
-        const allErrors = errors.array();
-
-        // Simpan error pertama dari setiap field
-        const seenFields = new Set();
-        const uniqueErrors = allErrors.filter((err) => {
-          if (seenFields.has(err.path)) return false;
-          seenFields.add(err.path);
-          return true;
-        });
-
-        const shortErrors = uniqueErrors.map((err) => ({
-          field: err.path,
-          message: err.msg,
-        }));
-        res.status(400).json({ errors: shortErrors });
-      }
-
-      const { name, username, password } = req.body;
+      const { name, username, password, appSource } = req.body;
 
       const existingUser = await User.findOne({ username });
       if (existingUser) {
@@ -93,7 +53,7 @@ const authControllers = {
       }
       
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = new User({ name, username, password: hashedPassword });
+      const user = new User({ name, username, password: hashedPassword, appSource });
       await user.save();
 
       res.json({ success: true, message: "Registrasi berhasil" });

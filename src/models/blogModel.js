@@ -1,26 +1,34 @@
 const mongoose = require("mongoose");
 
 const blogSchema = new mongoose.Schema({
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    },
-    image: {
-        type: String,
-        required: true,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-    date: {
-        type: Date,
-        required: true,
-    },
-    description: {
-        type: String,
-        required: true,
-    },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ["pariwisata", "kesehatan"],
+    required: true,
+  },
+  category: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Blog", blogSchema);
