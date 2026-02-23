@@ -27,6 +27,7 @@ const blogControllers = {
       }
 
       const result = blogs.map((blog) => ({
+        ...blog.toObject(), // jika pakai Mongoose
         id: blog._id,
         title: blog.title,
         date: blog.date.toISOString().split("T")[0],
@@ -35,7 +36,7 @@ const blogControllers = {
         name: blog.userId.name,
       }));
 
-      const totalData = await Blog.countDocuments();
+      const totalData = await Blog.countDocuments({ type: type });
       const totalPages = Math.ceil(totalData / limit);
 
       res.json({
@@ -124,7 +125,10 @@ const blogControllers = {
         name: blog.userId.name,
       }));
 
-      const totalData = await Blog.countDocuments({ userId: userId });
+      const totalData = await Blog.countDocuments({
+        userId: userId,
+        type: type,
+      });
       const totalPages = Math.ceil(totalData / limit);
 
       res.json({

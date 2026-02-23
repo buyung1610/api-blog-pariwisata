@@ -63,6 +63,15 @@ const authValidator = {
       .withMessage("Password harus berupa teks")
       .notEmpty()
       .withMessage("Password wajib diisi"),
+
+    body("appSource")
+      .exists()
+      .withMessage("appSource wajib diisi")
+      .bail()
+      .notEmpty()
+      .withMessage("appSource wajib diisi")
+      .isIn(["pariwisata", "kesehatan"])
+      .withMessage('appSource hanya boleh "pariwisata" atau "kesehatan"'),
   ],
 };
 

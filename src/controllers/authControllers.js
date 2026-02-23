@@ -8,9 +8,9 @@ const BlacklistToken = require("../models/blacklistToken");
 const authControllers = {
   login: async (req, res) => {
     try {
-      const { username, password } = req.body;
+      const { username, password, appSource } = req.body;
 
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ username, appSource });
       if (!user) {
         return res.status(401).json({ message: "Username tidak ditemukan" });
       }
@@ -32,7 +32,7 @@ const authControllers = {
       res.json({
         success: true,
         message: "Login berhasil",
-        token, 
+        token,
         user: payload,
       });
     } catch (error) {
@@ -51,9 +51,14 @@ const authControllers = {
       if (existingUser) {
         return res.status(400).json({ message: "Username sudah digunakan" });
       }
-      
+
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = new User({ name, username, password: hashedPassword, appSource });
+      const user = new User({
+        name,
+        username,
+        password: hashedPassword,
+        appSource,
+      });
       await user.save();
 
       res.json({ success: true, message: "Registrasi berhasil" });
@@ -75,7 +80,7 @@ const authControllers = {
         return res.status(400).json({ message: "Token tidak valid" });
       }
 
-      const expiredAt = new Date(decoded.exp * 1000); 
+      const expiredAt = new Date(decoded.exp * 1000);
 
       await BlacklistToken.create({ token, expiredAt });
 
@@ -100,11 +105,17 @@ const authControllers = {
         id: user._id,
         name: user.name,
         username: user.username,
-      }
-      res.json({ success: true, message: "Berhasil mengambil data user", data: result });
+      };
+      res.json({
+        success: true,
+        message: "Berhasil mengambil data user",
+        data: result,
+      });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ success: false, message: "Terjadi kesalahan server" });
+      res
+        .status(500)
+        .json({ success: false, message: "Terjadi kesalahan server" });
     }
   },
 };

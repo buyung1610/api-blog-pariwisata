@@ -52,7 +52,8 @@ app.use("/auth", authRoutes);
 app.use("/blog", blogRoutes);
 
 const port = process.env.PORT;
+const host = process.env.HOST || 'localhost';
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+app.listen(port, host, () => {
+    console.log(`Example app listening at http://${host}:${port}`);
 });

@@ -163,8 +163,8 @@ async function seedBlogs() {
     },
     // Artikel Kesehatan
     {
-      userId: users[3]._id,
-      image: "",
+      userId: users[2]._id,
+      image: "minum-air-putih.jpg",
       title: "Pentingnya Minum Air Putih yang Cukup Setiap Hari",
       date: "2022-09-12",
       type: "kesehatan",
@@ -174,8 +174,8 @@ async function seedBlogs() {
         \nKebiasaan minum air putih yang cukup setiap hari dapat meningkatkan energi, menjaga kesehatan kulit, serta membantu mengontrol nafsu makan. Disarankan untuk mengonsumsi minimal delapan gelas air per hari, namun kebutuhan ini dapat berbeda tergantung aktivitas, kondisi kesehatan, dan cuaca. Membiasakan diri membawa botol minum dapat menjadi langkah sederhana untuk menjaga hidrasi sepanjang hari.`,
     },
     {
-      userId: users[3]._id,
-      image: "",
+      userId: users[2]._id,
+      image: "manfaat-olahraga-pagi.jpg",
       title: "Manfaat Olahraga Ringan di Pagi Hari",
       date: "2022-10-14",
       type: "kesehatan",
@@ -185,8 +185,8 @@ async function seedBlogs() {
         \nMelakukan olahraga ringan selama 15–30 menit setiap pagi juga membantu menjaga berat badan ideal dan meningkatkan kualitas tidur. Kebiasaan ini dapat menjadi bagian dari gaya hidup sehat yang mudah diterapkan. Konsistensi adalah kunci untuk merasakan manfaat jangka panjang dari aktivitas fisik yang`,
     },
     {
-      userId: users[3]._id,
-      image: "",
+      userId: users[2]._id,
+      image: "menjaga-kesehatan-mata.jpg",
       title: "Tips Menjaga Kesehatan Mata di Era Digital",
       date: "2022-10-06",
       type: "kesehatan",
@@ -196,8 +196,8 @@ async function seedBlogs() {
         \nKonsumsi makanan yang kaya vitamin A dan antioksidan, seperti wortel, bayam, dan ikan, juga dapat membantu menjaga kesehatan mata. Mengurangi penggunaan gadget sebelum tidur dapat mencegah kelelahan mata dan membantu meningkatkan kualitas tidur. Dengan kebiasaan yang tepat, kesehatan mata dapat tetap terjaga meskipun sering menggunakan perangkat digital.`,
     },
     {
-      userId: users[3]._id,
-      image: "",
+      userId: users[2]._id,
+      image: "pola-tidur-sehat.jpg",
       title: "Pola Tidur Sehat untuk Produktivitas Maksimal",
       date: "2022-11-17",
       type: "kesehatan",
@@ -207,8 +207,8 @@ async function seedBlogs() {
         \nMenghindari penggunaan gadget sebelum tidur juga sangat disarankan karena cahaya biru dapat mengganggu produksi hormon melatonin. Orang dewasa dianjurkan tidur selama 7–9 jam setiap malam untuk menjaga kesehatan dan produktivitas. Dengan tidur yang cukup, tubuh akan lebih siap menghadapi aktivitas keesokan harinya.`,
     },
     {
-      userId: users[3]._id,
-      image: "",
+      userId: users[2]._id,
+      image: "pentingnya-sarapan-seimbang.jpg",
       title: "Pentingnya Sarapan Seimbang Setiap Pagi",
       date: "2022-10-16",
       type: "kesehatan",
@@ -218,8 +218,8 @@ async function seedBlogs() {
         \nMembiasakan sarapan setiap pagi juga dapat membantu mengontrol nafsu makan sepanjang hari. Orang yang rutin sarapan cenderung memiliki pola makan yang lebih sehat dan risiko obesitas yang lebih rendah. Dengan memilih menu yang tepat, sarapan dapat menjadi langkah awal menuju gaya hidup sehat.`,
     },
     {
-      userId: users[4]._id,
-      image: "",
+      userId: users[3]._id,
+      image: "mengelola-stres.jpg",
       title: "Cara Mengelola Stres dengan Teknik Pernapasan",
       date: "2022-10-01",
       type: "kesehatan",
@@ -229,8 +229,8 @@ async function seedBlogs() {
         \nMetode pernapasan 4-7-8 dapat dicoba sebagai latihan sederhana untuk meredakan stres. Tarik napas selama 4 detik, tahan selama 7 detik, lalu hembuskan perlahan selama 8 detik. Dengan latihan rutin, teknik ini dapat membantu meningkatkan ketenangan dan kualitas hidup secara keseluruhan.`,
     },
     {
-      userId: users[4]._id,
-      image: "",
+      userId: users[3]._id,
+      image: "bahaya-duduk-terlalu-lama.jpg",
       title: "Bahaya Duduk Terlalu Lama bagi Kesehatan",
       date: "2022-10-04",
       type: "kesehatan",
@@ -240,8 +240,8 @@ async function seedBlogs() {
         \nUntuk mengurangi risiko tersebut, disarankan untuk berdiri dan melakukan peregangan setiap 30–60 menit. Menggunakan meja kerja yang dapat diatur ketinggiannya dan rutin berjalan kaki juga dapat membantu. Perubahan kecil dalam rutinitas harian dapat memberikan manfaat besar bagi kesehatan jangka panjang.`,
     },
     {
-      userId: users[4]._id,
-      image: "",
+      userId: users[3]._id,
+      image: "manfaat-konsumsi-buah-dan-sayur.jpg",
       title: "Manfaat Konsumsi Buah dan Sayur Setiap Hari",
       date: "2022-09-20",
       type: "kesehatan",
@@ -251,8 +251,8 @@ async function seedBlogs() {
         \nDisarankan untuk mengonsumsi setidaknya lima porsi buah dan sayur setiap hari. Variasikan jenis dan warna buah serta sayuran untuk mendapatkan manfaat nutrisi yang beragam. Dengan kebiasaan ini, tubuh akan lebih sehat dan terlindungi dari berbagai penyakit.`,
     },
     {
-      userId: users[4]._id,
-      image: "",
+      userId: users[3]._id,
+      image: "menjaga-kesehatan-jantung.jpg",
       title: "Pentingnya Menjaga Kesehatan Jantung Sejak Dini",
       date: "2022-10-25",
       type: "kesehatan",
@@ -262,8 +262,8 @@ async function seedBlogs() {
         \nPemeriksaan kesehatan secara berkala dapat membantu mendeteksi risiko penyakit jantung lebih awal. Dengan menerapkan gaya hidup sehat dan kebiasaan yang baik, kesehatan jantung dapat terjaga hingga usia lanjut. Pencegahan sejak dini adalah langkah terbaik untuk hidup yang lebih sehat.`,
     },
     {
-      userId: users[4]._id,
-      image: "",
+      userId: users[3]._id,
+      image: "menjaga-sistem-imun.jpg",
       title: "Cara Menjaga Sistem Imun Agar Tetap Kuat",
       date: "2022-10-27",
       type: "kesehatan",
@@ -295,7 +295,10 @@ async function seedBlogs() {
   console.log(`Semua artikel berhasil dihapus. Total: ${result.deletedCount}`);
 
   for (const b of blogs) {
-    const defaultPath = path.join(__dirname, "../default_images", b.image);
+    var defaultPath = path.join(__dirname, "../default_images/pariwisata", b.image);
+    if (b.type === "kesehatan") {
+      defaultPath = path.join(__dirname, "../default_images/kesehatan", b.image);
+    }
 
     const formattedName = `${Date.now()}-${b.image}`;
     const uploadPath = path.join(uploadDir, formattedName);
