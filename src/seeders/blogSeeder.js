@@ -8,7 +8,7 @@ async function seedBlogs() {
   const uploadDir = path.join(__dirname, "../uploads");
   if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
-  await User.deleteMany({ name: { $in: ["Budi", "Ani"] } });
+  await User.deleteMany({ name: { $in: ["Budi", "Ani", "Beni", "Edo"] } });
 
   const hashedPasswordBudi = await bcrypt.hash("passwordBudi2", 10);
   const hashedPasswordAni = await bcrypt.hash("passwordAni2", 10);

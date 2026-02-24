@@ -27,7 +27,7 @@ const authControllers = {
         appSource: user.appSource,
       };
 
-      const token = jwt.sign(payload, SECRET_KEY);
+      const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
 
       res.json({
         success: true,
@@ -76,6 +76,7 @@ const authControllers = {
       if (!token) return res.status(400).json({ message: "Token diperlukan" });
 
       const decoded = jwt.decode(token);
+      console.log("Decoded token:", decoded);
       if (!decoded || !decoded.exp) {
         return res.status(400).json({ message: "Token tidak valid" });
       }

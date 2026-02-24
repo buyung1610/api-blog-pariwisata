@@ -71,12 +71,13 @@ const blogControllers = {
       }
 
       const result = {
+        ...blog.toObject(), // jika pakai Mongoose
         id: blog._id,
         title: blog.title,
         date: blog.date.toISOString().split("T")[0],
         image: `uploads/${blog.image}`,
-        name: blog.userId.name,
         description: blog.description,
+        name: blog.userId.name,
       };
 
       res.json({
@@ -158,14 +159,14 @@ const blogControllers = {
       let date = req.body.date;
 
       if (!userId) {
-        return res
-          .status(400)
-          .json({ message: "User tidak ditemukan, silahkan login" });
+        return res.status(400).json({
+          errors: [{ message: "User tidak ditemukan, silahkan login" }],
+        });
       }
 
       if (type === "kesehatan" && !category) {
         return res.status(400).json({
-          message: "category wajib untuk artikel kesehatan",
+          errors: [{ message: "category wajib untuk artikel kesehatan" }],
         });
       }
 
@@ -214,7 +215,7 @@ const blogControllers = {
       if (Object.keys(body).length === 0 && !req.file) {
         return res.status(400).json({
           success: false,
-          message: "Tidak ada data yang dikirim untuk update",
+          errors: [{ message: "Tidak ada data yang dikirim untuk update" }],
         });
       }
 
