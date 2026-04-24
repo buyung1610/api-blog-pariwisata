@@ -8,7 +8,9 @@ const BlacklistToken = require("../models/blacklistToken");
 const authControllers = {
   login: async (req, res) => {
     try {
-      const { username, password, appSource } = req.body;
+      const { username, password } = req.body;
+
+      appSource = req.body.appSource || "pariwisata";
 
       const user = await User.findOne({ username, appSource });
       if (!user) {
