@@ -66,6 +66,6 @@ app.use("/blog", blogRoutes);
 const port = process.env.PORT;
 const host = process.env.HOST || "localhost";
 
-app.listen(port, host, () => {
-  console.log(`Example app listening at http://${host}:${port}`);
+app.listen(port, "0.0.0.0", () => {
+    console.log(`Server running on port ${port}`);
 });
