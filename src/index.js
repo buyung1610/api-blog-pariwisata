@@ -54,6 +54,7 @@ cron.schedule("0 0 * * *", async () => {
     console.error("Error di cron job:", error);
   }
 });
+
 app.use(express.json());
 app.use(morgan("dev"));
 
