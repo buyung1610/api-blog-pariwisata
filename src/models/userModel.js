@@ -13,11 +13,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  appSource: {
-    type: String,
-    enum: ["pariwisata", "kesehatan"],
-    required: true,
-  },
 });
 
 module.exports = mongoose.model("User", userSchema);

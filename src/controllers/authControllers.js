@@ -4,15 +4,14 @@ const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
 const { validationResult } = require("express-validator");
 const BlacklistToken = require("../models/blacklistToken");
+const { update } = require("../validators/blogValidator");
 
 const authControllers = {
   login: async (req, res) => {
     try {
       const { username, password } = req.body;
 
-      appSource = req.body.appSource || "pariwisata";
-
-      const user = await User.findOne({ username, appSource });
+      const user = await User.findOne({ username });
       if (!user) {
         return res.status(401).json({ message: "Username tidak ditemukan" });
       }
@@ -26,7 +25,6 @@ const authControllers = {
         id: user._id,
         username: user.username,
         name: user.name,
-        appSource: user.appSource,
       };
 
       const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" });
@@ -47,7 +45,7 @@ const authControllers = {
 
   register: async (req, res) => {
     try {
-      const { name, username, password, appSource } = req.body;
+      const { name, username, password } = req.body;
 
       const existingUser = await User.findOne({ username });
       if (existingUser) {
@@ -59,7 +57,6 @@ const authControllers = {
         name,
         username,
         password: hashedPassword,
-        appSource,
       });
       await user.save();
 
@@ -121,6 +118,42 @@ const authControllers = {
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
   },
+
+  updateProfile: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { name, username, password } = req.body;
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User tidak ditemukan" });
+      }
+
+      // Periksa apakah username sudah digunakan oleh user lain
+      const existingUser = await User.findOne({ username, _id: { $ne: userId } });
+      if (existingUser) {
+        return res.status(400).json({ message: "Username sudah digunakan" });
+      }
+
+      // Hash password jika diubah
+      if (password) {
+        user.password = await bcrypt.hash(password, 10);
+      }
+
+      // Update informasi user
+      user.name = name || user.name;
+      user.username = username || user.username;
+
+      await user.save();
+
+      res.json({ success: true, message: "Profile berhasil diperbarui" });
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ success: false, message: "Terjadi kesalahan server" });
+    }
+  }
 };
 
 module.exports = authControllers;

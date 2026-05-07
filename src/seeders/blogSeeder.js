@@ -19,25 +19,21 @@ async function seedBlogs() {
     {
       name: "Budi",
       username: "budi",
-      appSource: "pariwisata",
       password: hashedPasswordBudi,
     },
     {
       name: "Ani",
       username: "ani",
-      appSource: "pariwisata",
       password: hashedPasswordAni,
     },
     {
       name: "Beni",
       username: "beni",
-      appSource: "kesehatan",
       password: hashedPasswordBeni,
     },
     {
       name: "Edo",
       username: "edo",
-      appSource: "kesehatan",
       password: hashedPasswordEdo,
     },
   ]);
@@ -295,8 +291,9 @@ async function seedBlogs() {
   console.log(`Semua artikel berhasil dihapus. Total: ${result.deletedCount}`);
 
   for (const b of blogs) {
-    var defaultPath = path.join(__dirname, "../default_images/pariwisata", b.image);
-    if (b.type === "kesehatan") {
+    let defaultPath = path.join(__dirname, "../default_images/pariwisata", b.image);
+    // Check if it's in kesehatan folder if not in pariwisata
+    if (!fs.existsSync(defaultPath)) {
       defaultPath = path.join(__dirname, "../default_images/kesehatan", b.image);
     }
 
@@ -305,8 +302,9 @@ async function seedBlogs() {
 
     fs.copyFileSync(defaultPath, uploadPath);
 
+    const { type, ...blogData } = b;
     await Blog.create({
-      ...b,
+      ...blogData,
       image: formattedName,
     });
   }

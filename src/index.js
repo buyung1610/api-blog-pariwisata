@@ -8,10 +8,9 @@ const path = require("path");
 const cron = require("node-cron");
 const seedBlogs = require("./seeders/blogSeeder");
 
-console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
-if (!process.env.MONGODB_URI) {
-  console.error("❌ MONGODB_URI tidak terbaca");
+if (!process.env.MONGO_URI) {
+  console.error("❌ MONGO_URI tidak terbaca");
   process.exit(1);
 }
 
@@ -55,7 +54,6 @@ cron.schedule("0 0 * * *", async () => {
     console.error("Error di cron job:", error);
   }
 });
-
 app.use(express.json());
 app.use(morgan("dev"));
 

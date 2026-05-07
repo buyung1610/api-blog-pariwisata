@@ -6,14 +6,10 @@ const blogControllers = {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || "";
-    const type = req.user.appSource || "";
-
-    // Hitung data yang dilewati (skip)
-    const skip = (page - 1) * limit;
     try {
+      const skip = (page - 1) * limit;
       const blogs = await Blog.find({
         title: { $regex: "^" + search, $options: "i" },
-        type: type,
       })
         .populate("userId")
         .skip(skip)
@@ -36,7 +32,9 @@ const blogControllers = {
         name: blog.userId.name,
       }));
 
-      const totalData = await Blog.countDocuments({ type: type });
+      const totalData = await Blog.countDocuments({
+        title: { $regex: "^" + search, $options: "i" },
+      });
       const totalPages = Math.ceil(totalData / limit);
 
       res.json({
@@ -59,9 +57,8 @@ const blogControllers = {
   getById: async (req, res) => {
     try {
       const id = req.params.id;
-      const type = req.user.appSource || "";
 
-      const blog = await Blog.findOne({ _id: id, type: type }).populate(
+      const blog = await Blog.findOne({ _id: id }).populate(
         "userId",
       );
       if (!blog) {
@@ -97,16 +94,12 @@ const blogControllers = {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || "";
-    const type = req.user.appSource || "";
-
-    // Hitung data yang dilewati (skip)
-    const skip = (page - 1) * limit;
     try {
       const userId = req.user.id;
+      const skip = (page - 1) * limit;
       const blogs = await Blog.find({
         userId: userId,
         title: { $regex: search, $options: "i" },
-        type: type,
       })
         .populate("userId")
         .skip(skip)
@@ -129,7 +122,7 @@ const blogControllers = {
 
       const totalData = await Blog.countDocuments({
         userId: userId,
-        type: type,
+        title: { $regex: search, $options: "i" },
       });
       const totalPages = Math.ceil(totalData / limit);
 
@@ -155,18 +148,11 @@ const blogControllers = {
       const userId = req.user?.id; // pastikan user.id tersedia dari middleware auth
 
       const { title, description, category } = req.body;
-      const type = req.user.appSource;
       let date = req.body.date;
 
       if (!userId) {
         return res.status(400).json({
           errors: [{ message: "User tidak ditemukan, silahkan login" }],
-        });
-      }
-
-      if (type === "kesehatan" && !category) {
-        return res.status(400).json({
-          errors: [{ message: "category wajib untuk artikel kesehatan" }],
         });
       }
 
@@ -187,7 +173,6 @@ const blogControllers = {
         title,
         date,
         description,
-        type,
         category,
       });
       await blog.save();
@@ -210,7 +195,6 @@ const blogControllers = {
       const userId = req.user?.id;
 
       const body = req.body || {};
-      const type = req.user.appSource;
 
       if (Object.keys(body).length === 0 && !req.file) {
         return res.status(400).json({
