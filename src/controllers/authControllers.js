@@ -130,19 +130,23 @@ const authControllers = {
       }
 
       // Periksa apakah username sudah digunakan oleh user lain
-      const existingUser = await User.findOne({ username, _id: { $ne: userId } });
+      const existingUser = await User.findOne({
+        username,
+        _id: { $ne: userId },
+      });
       if (existingUser) {
         return res.status(400).json({ message: "Username sudah digunakan" });
       }
 
       // Hash password jika diubah
+      let hashedPassword = user.password;
       if (password) {
-        user.password = await bcrypt.hash(password, 10);
+        hashedPassword = await bcrypt.hash(password, 10);
       }
 
-      // Update informasi user
       user.name = name || user.name;
       user.username = username || user.username;
+      user.password = hashedPassword;
 
       await user.save();
 
@@ -153,7 +157,7 @@ const authControllers = {
         .status(500)
         .json({ success: false, message: "Terjadi kesalahan server" });
     }
-  }
+  },
 };
 
 module.exports = authControllers;

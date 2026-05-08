@@ -55,6 +55,35 @@ const authValidator = {
       .notEmpty()
       .withMessage("Password wajib diisi"),
   ],
+
+  updateProfileValidator: [
+    body("name")
+      .optional()
+      .isString()
+      .withMessage("Name harus berupa teks")
+      .isLength({ min: 3 })
+      .withMessage("Name minimal 3 karakter"),
+
+    body("username")
+      .optional()
+      .isString()
+      .withMessage("Username harus berupa teks")
+      .isAlphanumeric()
+      .withMessage("Username hanya boleh huruf dan angka")
+      .bail()
+      .matches(/^\S+$/)
+      .withMessage("Username tidak boleh mengandung spasi"),
+
+    body("password")
+      .optional()
+      .isString()
+      .withMessage("Password harus berupa teks")
+      .isLength({ min: 6 })
+      .withMessage("Password minimal 6 karakter")
+      .bail()
+      .matches(/^\S+$/)
+      .withMessage("Password tidak boleh mengandung spasi"),
+  ],
 };
 
 module.exports = authValidator;
