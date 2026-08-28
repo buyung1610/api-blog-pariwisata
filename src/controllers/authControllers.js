@@ -2,9 +2,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
-const { validationResult } = require("express-validator");
 const BlacklistToken = require("../models/blacklistToken");
-const { update } = require("../validators/blogValidator");
 
 const authControllers = {
   login: async (req, res) => {
@@ -22,7 +20,7 @@ const authControllers = {
       }
 
       const payload = {
-        id: user._id,
+        id: user.id || user._id,
         username: user.username,
         name: user.name,
       };
@@ -53,12 +51,11 @@ const authControllers = {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const user = new User({
+      await User.create({
         name,
         username,
         password: hashedPassword,
       });
-      await user.save();
 
       res.json({ success: true, message: "Registrasi berhasil" });
     } catch (error) {
@@ -102,7 +99,7 @@ const authControllers = {
       }
 
       const result = {
-        id: user._id,
+        id: user.id || user._id,
         name: user.name,
         username: user.username,
       };
@@ -130,12 +127,14 @@ const authControllers = {
       }
 
       // Periksa apakah username sudah digunakan oleh user lain
-      const existingUser = await User.findOne({
-        username,
-        _id: { $ne: userId },
-      });
-      if (existingUser) {
-        return res.status(400).json({ message: "Username sudah digunakan" });
+      if (username) {
+        const existingUser = await User.findOne({
+          username,
+          _id: { $ne: userId },
+        });
+        if (existingUser) {
+          return res.status(400).json({ message: "Username sudah digunakan" });
+        }
       }
 
       // Hash password jika diubah
@@ -144,11 +143,14 @@ const authControllers = {
         hashedPassword = await bcrypt.hash(password, 10);
       }
 
-      user.name = name || user.name;
-      user.username = username || user.username;
-      user.password = hashedPassword;
+      const updatedName = name || user.name;
+      const updatedUsername = username || user.username;
 
-      await user.save();
+      await User.update(userId, {
+        name: updatedName,
+        username: updatedUsername,
+        password: hashedPassword,
+      });
 
       res.json({ success: true, message: "Profile berhasil diperbarui" });
     } catch (error) {

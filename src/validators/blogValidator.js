@@ -42,7 +42,7 @@ const blogValidator = {
   ],
 
   update: [
-    param("id").isMongoId().withMessage("ID tidak valid"),
+    param("id").isInt().withMessage("ID tidak valid"),
 
     body("title")
       .optional()
@@ -89,7 +89,7 @@ const blogValidator = {
       .withMessage("Search harus berupa teks"),
   ],
 
-  getById: [param("id").isMongoId().withMessage("ID tidak valid")],
+  getById: [param("id").isInt().withMessage("ID tidak valid")],
 };
 
 module.exports = blogValidator;

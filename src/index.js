@@ -8,9 +8,8 @@ const path = require("path");
 const cron = require("node-cron");
 const seedBlogs = require("./seeders/blogSeeder");
 
-
-if (!process.env.MONGO_URI) {
-  console.error("❌ MONGO_URI tidak terbaca");
+if (!process.env.DB_HOST && !process.env.DB_NAME) {
+  console.error("❌ Database environment variable tidak terbaca");
   process.exit(1);
 }
 
@@ -19,10 +18,11 @@ connectDB();
 const authRoutes = require("./routes/authRoutes");
 const blogRoutes = require("./routes/blogRoutes");
 
-app.use(express.json()); // untuk application/json
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
-// Middleware
+// Middleware CORS
 app.use(
   cors({
     origin: "*",
@@ -45,26 +45,21 @@ app.use(
   }),
 );
 
-// Job jalan tiap jam 12
+// Job jalan tiap jam 12 malam
 cron.schedule("0 0 * * *", async () => {
   console.log("Cron jalan:", new Date().toLocaleString());
   try {
-    await seedBlogs(); // tunggu sampai selesai
+    await seedBlogs();
   } catch (error) {
     console.error("Error di cron job:", error);
   }
 });
 
-app.use(express.json());
-app.use(morgan("dev"));
-
-app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/blog", blogRoutes);
 
-const port = process.env.PORT;
-const host = process.env.HOST || "localhost";
+const port = process.env.PORT || 4000;
 
 app.listen(port, "0.0.0.0", () => {
-    console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });

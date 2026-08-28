@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "seed": "node -e \"require('./src/seeders/blogSeeder')()\""
   },
   "keywords": [],
   "author": "",
@@ -18,9 +19,9 @@
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.17.0",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
+    "mysql2": "^3.24.2",
     "ngrok": "^5.0.0-beta.2",
     "node-cron": "^4.2.1",
     "nodemon": "^3.1.10",

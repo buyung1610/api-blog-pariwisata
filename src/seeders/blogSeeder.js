@@ -3,8 +3,10 @@ const path = require("path");
 const Blog = require("../models/blogModel");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const connectDB = require("../config/connectDb");
 
 async function seedBlogs() {
+  await connectDB();
   const uploadDir = path.join(__dirname, "../uploads");
   if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
@@ -41,7 +43,7 @@ async function seedBlogs() {
   const blogs = [
     // Artikel Wisata
     {
-      userId: users[0]._id,
+      userId: users[0].id,
       image: "banda-neira.png",
       title: "Banda Neira",
       date: "2022-01-01",
@@ -53,7 +55,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: users[0]._id,
+      userId: users[0].id,
       image: "borobudur.png",
       title: "Candi Borobudur",
       date: "2022-02-01",
@@ -61,11 +63,11 @@ async function seedBlogs() {
       description: `Candi Borobudur adalah sebuah candi Buddha yang terletak di Borobudur, Magelang, Jawa Tengah, Indonesia. Candi ini terletak kurang lebih 100 km di sebelah barat daya Semarang, 86 km di sebelah barat Surakarta, dan 40 km di sebelah barat laut Yogyakarta. Candi dengan banyak stupa ini didirikan oleh para penganut agama Buddha Mahayana sekitar tahun 800-an Masehi pada masa pemerintahan wangsa Syailendra. Borobudur adalah candi atau kuil Buddha terbesar di dunia, sekaligus salah satu monumen Buddha terbesar di dunia.
         \nMonumen ini terdiri atas enam teras berbentuk bujur sangkar yang di atasnya terdapat tiga pelataran melingkar, pada dindingnya dihiasi dengan 2.672 panel relief dan aslinya terdapat 504 arca Buddha. Borobudur memiliki koleksi relief Buddha terlengkap dan terbanyak di dunia. Stupa utama terbesar terletak di tengah sekaligus memahkotai bangunan ini, dikelilingi oleh tiga barisan melingkar 72 stupa berlubang yang di dalamnya terdapat arca Buddha tengah duduk bersila dalam posisi teratai sempurna dengan mudra (sikap tangan) Dharmachakra mudra (memutar roda dharma).
         \nMonumen ini merupakan model alam semesta dan dibangun sebagai tempat suci untuk memuliakan Buddha sekaligus berfungsi sebagai tempat ziarah untuk menuntun umat manusia beralih dari alam nafsu duniawi menuju pencerahan dan kebijaksanaan sesuai ajaran Buddha.Para peziarah masuk melalui sisi timur dan memulai ritual di dasar candi dengan berjalan melingkari bangunan suci ini searah jarum jam, sambil terus naik ke undakan berikutnya melalui tiga tingkatan ranah dalam kosmologi Buddha. Ketiga tingkatan itu adalah Kāmadhātu (ranah hawa nafsu), Rupadhatu (ranah berwujud), dan Arupadhatu (ranah tak berwujud). Dalam perjalanannya para peziarah berjalan melalui serangkaian lorong dan tangga dengan menyaksikan tak kurang dari 1.460 panel relief indah yang terukir pada dinding dan pagar langkan.
-        \nMenurut bukti-bukti sejarah, Borobudur ditinggalkan pada abad ke-10 seiring dipindahkannya pusat Kerajaan Mataram Kuno ke Jawa Timur oleh Mpu Sindok.Dunia mulai menyadari keberadaan bangunan ini sejak ditemukan 1814 oleh Sir Thomas Stamford Raffles, yang saat itu menjabat sebagai Gubernur Jenderal Inggris atas Jawa. Sejak saat itu Borobudur telah mengalami serangkaian upaya penyelamatan dan pemugaran (perbaikan kembali). Proyek pemugaran terbesar digelar pada kurun waktu 1975 hingga 1982 atas upaya Pemerintah Republik Indonesia dan UNESCO, kemudian situs bersejarah ini masuk dalam daftar Situs Warisan Dunia.
+        \nMenurut bukti-bukti sejarah, Borobudur ditinggalkan pada abad ke-10 seiring dipindahkannya pusat Kerajaan Mataram Kuno ke Jawa Timur oleh Mpu Sindok.Dunia mulai menyadari keberadaan bangunan ini sejak ditemukan 1814 oleh Sir Thomas Stamford Raffles, yang saat itu menjabat sebagai Gubernur Jenderal Inggris atas Jawa. Sejak saat itu Borobudur telah mengalami serangkaian upaya penyelamatkan dan pemugaran (perbaikan kembali). Proyek pemugaran terbesar digelar pada kurun waktu 1975 hingga 1982 atas upaya Pemerintah Republik Indonesia dan UNESCO, kemudian situs bersejarah ini masuk dalam daftar Situs Warisan Dunia.
         `,
     },
     {
-      userId: users[0]._id,
+      userId: users[0].id,
       image: "bromo.png",
       title: "Gunung Bromo",
       date: "2022-03-01",
@@ -76,7 +78,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: users[0]._id,
+      userId: users[0].id,
       image: "nusa-penida.png",
       title: "Nusa Penida",
       date: "2022-04-01",
@@ -89,7 +91,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: users[0]._id,
+      userId: users[0].id,
       image: "ranu-gumbolo.png",
       title: "Ranu Gumbolo",
       date: "2022-05-01",
@@ -100,7 +102,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: users[1]._id,
+      userId: users[1].id,
       image: "raja-ampat.jpg",
       title: "Raja Ampat",
       date: "2022-06-01",
@@ -112,7 +114,7 @@ async function seedBlogs() {
         `,
     },
     {
-      userId: users[1]._id,
+      userId: users[1].id,
       image: "kawah-ijen.jpg",
       title: "Kawah Ijen",
       date: "2022-07-01",
@@ -124,7 +126,7 @@ async function seedBlogs() {
       `,
     },
     {
-      userId: users[1]._id,
+      userId: users[1].id,
       image: "danau-toba.jpg",
       title: "Danau Toba",
       date: "2022-08-01",
@@ -135,7 +137,7 @@ async function seedBlogs() {
       `,
     },
     {
-      userId: users[1]._id,
+      userId: users[1].id,
       image: "gua-jomblang.jpg",
       title: "Goa Jomblang",
       date: "2022-09-01",
@@ -146,7 +148,7 @@ async function seedBlogs() {
       `,
     },
     {
-      userId: users[1]._id,
+      userId: users[1].id,
       image: "gunung-rinjani.jpg",
       title: "Gunung Rinjani",
       date: "2022-10-01",
@@ -157,25 +159,20 @@ async function seedBlogs() {
         \nDi sisi timur kaldera terdapat Gunung Baru (atau Gunung Barujari) yang memiliki kawah berukuran 170m×200 m dengan ketinggian 2.296 – 2376 m dpl. Gunung kecil ini terakhir meletus pada tanggal 25 Oktober 2015 dan 3 November 2015,setelah sebelumnya tercatat meletus Mei 2009 dan pada tahun 2004. Letusan tahun 2009 ini memakan korban jiwa tidak langsung 31 orang, karena banjir bandang pada Kokok (Sungai) Tanggek akibat desakan lava ke Segara Anak. Sebelumnya, Gunung Barujari pernah tercatat meletus pada tahun 1944 (sekaligus pembentukannya), 1966, dan 1994.
       `,
     },
-    
   ];
 
-  fs.readdir(uploadDir, (err, files) => {
-    if (err) {
-      return console.error("Gagal membaca folder:", err);
-    }
-
-    files.forEach((file) => {
+  if (fs.existsSync(uploadDir)) {
+    const files = fs.readdirSync(uploadDir);
+    for (const file of files) {
       const filePath = path.join(uploadDir, file);
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error(`Gagal menghapus file ${file}:`, err);
-        } else {
-          console.log(`File ${file} berhasil dihapus`);
-        }
-      });
-    });
-  });
+      try {
+        fs.unlinkSync(filePath);
+        console.log(`File ${file} berhasil dihapus`);
+      } catch (err) {
+        console.error(`Gagal menghapus file ${file}:`, err);
+      }
+    }
+  }
 
   const result = await Blog.deleteMany({});
   console.log(`Semua artikel berhasil dihapus. Total: ${result.deletedCount}`);

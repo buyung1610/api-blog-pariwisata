@@ -1,5 +1,12 @@
 const Blog = require("../models/blogModel");
-const User = require("../models/userModel");
+
+const formatDate = (dateVal) => {
+  if (!dateVal) return "";
+  if (dateVal instanceof Date) {
+    return dateVal.toISOString().split("T")[0];
+  }
+  return String(dateVal).split("T")[0];
+};
 
 const blogControllers = {
   getAll: async (req, res) => {
@@ -9,12 +16,11 @@ const blogControllers = {
     try {
       const skip = (page - 1) * limit;
       const blogs = await Blog.find({
-        title: { $regex: "^" + search, $options: "i" },
-      })
-        .populate("userId")
-        .skip(skip)
-        .limit(limit)
-        .sort({ date: -1 });
+        search,
+        searchStartsWith: true,
+        skip,
+        limit,
+      });
 
       if (blogs.length === 0) {
         return res
@@ -23,17 +29,18 @@ const blogControllers = {
       }
 
       const result = blogs.map((blog) => ({
-        ...blog.toObject(), // jika pakai Mongoose
-        id: blog._id,
+        ...blog,
+        id: blog.id,
         title: blog.title,
-        date: blog.date.toISOString().split("T")[0],
+        date: formatDate(blog.date),
         image: `uploads/${blog.image}`,
         description: blog.description,
-        name: blog.userId.name,
+        name: blog.userId ? blog.userId.name : "",
       }));
 
       const totalData = await Blog.countDocuments({
-        title: { $regex: "^" + search, $options: "i" },
+        search,
+        searchStartsWith: true,
       });
       const totalPages = Math.ceil(totalData / limit);
 
@@ -58,9 +65,7 @@ const blogControllers = {
     try {
       const id = req.params.id;
 
-      const blog = await Blog.findOne({ _id: id }).populate(
-        "userId",
-      );
+      const blog = await Blog.findById(id);
       if (!blog) {
         return res
           .status(404)
@@ -68,13 +73,13 @@ const blogControllers = {
       }
 
       const result = {
-        ...blog.toObject(), // jika pakai Mongoose
-        id: blog._id,
+        ...blog,
+        id: blog.id,
         title: blog.title,
-        date: blog.date.toISOString().split("T")[0],
+        date: formatDate(blog.date),
         image: `uploads/${blog.image}`,
         description: blog.description,
-        name: blog.userId.name,
+        name: blog.userId ? blog.userId.name : "",
       };
 
       res.json({
@@ -99,30 +104,30 @@ const blogControllers = {
       const skip = (page - 1) * limit;
       const blogs = await Blog.find({
         userId: userId,
-        title: { $regex: search, $options: "i" },
-      })
-        .populate("userId")
-        .skip(skip)
-        .limit(limit)
-        .sort({ date: -1 });
+        search,
+        searchStartsWith: false,
+        skip,
+        limit,
+      });
 
       if (blogs.length === 0) {
         return res.status(404).json({ success: false, message: "Blog kosong" });
       }
 
       const result = blogs.map((blog) => ({
-        ...blog.toObject(), // jika pakai Mongoose
-        id: blog._id,
+        ...blog,
+        id: blog.id,
         title: blog.title,
-        date: blog.date.toISOString().split("T")[0],
+        date: formatDate(blog.date),
         image: `uploads/${blog.image}`,
         description: blog.description,
-        name: blog.userId.name,
+        name: blog.userId ? blog.userId.name : "",
       }));
 
       const totalData = await Blog.countDocuments({
         userId: userId,
-        title: { $regex: search, $options: "i" },
+        search,
+        searchStartsWith: false,
       });
       const totalPages = Math.ceil(totalData / limit);
 
@@ -167,7 +172,7 @@ const blogControllers = {
         return res.status(400).json({ message: "Gambar wajib diisi" });
       }
 
-      const blog = new Blog({
+      const blog = await Blog.create({
         userId,
         image,
         title,
@@ -175,7 +180,6 @@ const blogControllers = {
         description,
         category,
       });
-      await blog.save();
 
       res.status(201).json({
         success: true,
@@ -212,27 +216,27 @@ const blogControllers = {
           .json({ success: false, message: "Blog tidak ditemukan" });
       }
 
-      if (blog.userId.toString() !== userId) {
+      const authorId = String(blog.user_id || blog.userId?.id || blog.userId);
+      if (authorId !== String(userId)) {
         return res
           .status(403)
           .json({ success: false, message: "Anda tidak memiliki akses" });
       }
 
-      blog.title = title || blog.title;
-      blog.date = date || blog.date;
-      blog.description = description || blog.description;
-      blog.category = category || blog.category;
+      const updatedImage = req.file ? req.file.filename : undefined;
 
-      if (req.file) {
-        blog.image = req.file.filename;
-      }
-
-      await blog.save();
+      const updatedBlog = await Blog.update(req.params.id, {
+        title,
+        date,
+        description,
+        category,
+        image: updatedImage,
+      });
 
       res.status(200).json({
         success: true,
         message: "Blog berhasil diperbarui",
-        data: blog,
+        data: updatedBlog,
       });
     } catch (error) {
       console.error(error);
@@ -245,7 +249,7 @@ const blogControllers = {
   deleteBlog: async (req, res) => {
     try {
       const userId = req.user?.id;
-      const blog = await Blog.findByIdAndDelete(req.params.id);
+      const blog = await Blog.findById(req.params.id);
 
       if (!blog) {
         return res
@@ -253,11 +257,14 @@ const blogControllers = {
           .json({ success: false, message: "Blog tidak ditemukan" });
       }
 
-      if (blog.userId.toString() !== userId) {
+      const authorId = String(blog.user_id || blog.userId?.id || blog.userId);
+      if (authorId !== String(userId)) {
         return res
           .status(403)
           .json({ success: false, message: "Anda tidak memiliki akses" });
       }
+
+      await Blog.findByIdAndDelete(req.params.id);
 
       res.json({ success: true, message: "Blog berhasil dihapus" });
     } catch (error) {
