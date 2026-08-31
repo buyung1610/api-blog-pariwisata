@@ -30,7 +30,8 @@ const blogControllers = {
 
       const result = blogs.map((blog) => ({
         ...blog,
-        id: blog.id,
+        id: String(blog.id),
+        _id: String(blog._id || blog.id),
         title: blog.title,
         date: formatDate(blog.date),
         image: `uploads/${blog.image}`,
@@ -74,7 +75,8 @@ const blogControllers = {
 
       const result = {
         ...blog,
-        id: blog.id,
+        id: String(blog.id),
+        _id: String(blog._id || blog.id),
         title: blog.title,
         date: formatDate(blog.date),
         image: `uploads/${blog.image}`,
@@ -116,7 +118,8 @@ const blogControllers = {
 
       const result = blogs.map((blog) => ({
         ...blog,
-        id: blog.id,
+        id: String(blog.id),
+        _id: String(blog._id || blog.id),
         title: blog.title,
         date: formatDate(blog.date),
         image: `uploads/${blog.image}`,

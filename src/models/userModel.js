@@ -8,14 +8,14 @@ const User = {
         "SELECT * FROM users WHERE username = ? AND id != ?",
         [conditions.username, conditions._id.$ne]
       );
-      return rows[0] ? { ...rows[0], _id: rows[0].id } : null;
+      return rows[0] ? { ...rows[0], id: String(rows[0].id), _id: String(rows[0].id) } : null;
     }
     if (conditions.username) {
       const [rows] = await pool.query(
         "SELECT * FROM users WHERE username = ?",
         [conditions.username]
       );
-      return rows[0] ? { ...rows[0], _id: rows[0].id } : null;
+      return rows[0] ? { ...rows[0], id: String(rows[0].id), _id: String(rows[0].id) } : null;
     }
     if (conditions._id || conditions.id) {
       const id = conditions._id || conditions.id;
@@ -23,7 +23,7 @@ const User = {
         "SELECT * FROM users WHERE id = ?",
         [id]
       );
-      return rows[0] ? { ...rows[0], _id: rows[0].id } : null;
+      return rows[0] ? { ...rows[0], id: String(rows[0].id), _id: String(rows[0].id) } : null;
     }
     return null;
   },
@@ -33,7 +33,7 @@ const User = {
       "SELECT * FROM users WHERE id = ?",
       [id]
     );
-    return rows[0] ? { ...rows[0], _id: rows[0].id } : null;
+    return rows[0] ? { ...rows[0], id: String(rows[0].id), _id: String(rows[0].id) } : null;
   },
 
   create: async ({ name, username, password }) => {
@@ -43,8 +43,8 @@ const User = {
     );
     const id = result.insertId;
     return {
-      id,
-      _id: id,
+      id: String(id),
+      _id: String(id),
       name,
       username,
       password,

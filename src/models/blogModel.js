@@ -29,11 +29,11 @@ const Blog = {
     const [rows] = await pool.query(sql, params);
 
     return rows.map((row) => ({
-      id: row.id,
-      _id: row.id,
+      id: String(row.id),
+      _id: String(row.id),
       userId: {
-        id: row.author_id,
-        _id: row.author_id,
+        id: String(row.author_id),
+        _id: String(row.author_id),
         name: row.author_name,
         username: row.author_username,
       },
@@ -77,15 +77,15 @@ const Blog = {
 
     const row = rows[0];
     return {
-      id: row.id,
-      _id: row.id,
+      id: String(row.id),
+      _id: String(row.id),
       userId: {
-        id: row.author_id,
-        _id: row.author_id,
+        id: String(row.author_id),
+        _id: String(row.author_id),
         name: row.author_name,
         username: row.author_username,
       },
-      user_id: row.user_id,
+      user_id: String(row.user_id),
       image: row.image,
       title: row.title,
       date: row.date,

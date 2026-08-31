@@ -20,7 +20,8 @@ const authControllers = {
       }
 
       const payload = {
-        id: user.id || user._id,
+        id: String(user.id || user._id),
+        _id: String(user.id || user._id),
         username: user.username,
         name: user.name,
       };
@@ -99,7 +100,8 @@ const authControllers = {
       }
 
       const result = {
-        id: user.id || user._id,
+        id: String(user.id || user._id),
+        _id: String(user.id || user._id),
         name: user.name,
         username: user.username,
       };
